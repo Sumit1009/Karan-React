@@ -1,4 +1,4 @@
-function serviceRequest() {
+function taskRun() {
 
     // Clockpicker
     var cpInput = $('.clockpicker').clockpicker();
@@ -8,4 +8,4 @@ function serviceRequest() {
     });
 }
 
-export default serviceRequest;
+export default taskRun;

@@ -6,9 +6,8 @@ import {createHistory} from 'history'
 
 import Core from './components/Core/Core';
 
-import StaffMembers from "./components/Member/Members";
-import CreateServiceRequest from './components/task/CreateTask';
-import ListServiceRequest from './components/task/ListTask';
+import CreateTask from './components/task/CreateTask';
+import ListTask from './components/task/ListTask';
 
 import Landing from "./components/UserDashboard/Landing";
 import Dashboard from "./components/UserDashboard/Dashboard";
@@ -38,27 +37,16 @@ ReactDOM.render(
 
             <Route path="dashboard" component={Dashboard}/>
             <Route path="login" component={Login}/>
+            <Route path="create-task" component={CreateTask}/>
+            <Route path="all-tasks" component={ListTask}/>
 
             <Route path="user">
 
                 <Route path="create" component={CreateUser}/>
-                <Route path="list" component={CreateServiceRequest}/>
+                <Route path="list" component={CreateTask}/>
             </Route>
-
-            <Route path="assignedToMe" component={() => <ListServiceRequest status="ASSIGNED"/>}/>
-            <Route path="all-requests" component={() => <ListServiceRequest status="ALL"/>}/>
-
-
-            <Route path="staffMembers" component={StaffMembers.StaffList}/>
-
-            <Route path="profile">
-                <Route path="manage" component={StaffMembers.StaffProfile}/>
-                <Route path="change-password" component={StaffMembers.StaffProfile}/>
-            </Route>
-
 
         </Route>
-
 
     </Router>,
     document.getElementById('app')

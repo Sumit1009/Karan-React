@@ -52,7 +52,6 @@ class Dashboard extends React.Component {
     handleSubmit(task, event) {
         event.preventDefault();
         let taskId = task.taskId;
-        let staffMemberId = this.refs.staffMemberId.value;
 
         fetch(url, {
             method: 'POST',
@@ -60,7 +59,7 @@ class Dashboard extends React.Component {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
-            body: JSON.stringify({staffMemberId: staffMemberId, taskId: taskId}),
+            body: JSON.stringify({ taskId: taskId}),
         }).then(response => response.json()).then(json => {
             // swal('Message', json.message);
             let tempList = this.state.result.taskList;
@@ -130,7 +129,6 @@ class Dashboard extends React.Component {
         })
             .then(response => response.json())
             .then(json => {
-                this.setState({staffList: json});
                 this.setState({task: task});
                 fetch(url, {
                     method: 'POST',

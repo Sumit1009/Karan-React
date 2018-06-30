@@ -1,7 +1,7 @@
 import React from 'react';
 import pubsub from 'pubsub-js';
 import '../Forms/Validation.scss';
-import serviceRequest from './Task.run';
+import taskRun from './Task.run';
 import BasicDetail from "../Common/BasicDetail";
 
 const url = '';
@@ -49,11 +49,11 @@ class CreateTask extends React.Component {
     }
 
     componentWillMount() {
-        pubsub.publish('setPageTitle', "Service Request");
+        pubsub.publish('setPageTitle', "Task");
     }
 
     componentDidMount() {
-        serviceRequest();
+        taskRun();
 
         let jsonObj = {};
         fetch(url, {
@@ -218,14 +218,14 @@ class CreateTask extends React.Component {
                             <div className="row">
                                 <div className="col-md-12">
                                     <fieldset>
-                                        <legend>Create Service Request</legend>
+                                        <legend>Create Task</legend>
                                     </fieldset>
                                 </div>
                                 <div className="col-md-12">
                                     <form style={{marginLeft: '25px', marginRight: '25px'}}>
 
                                         <div className="mda-form-group">
-                                            <label className="control-label">Service</label>
+                                            <label className="control-label">Task</label>
                                             <select id="select2-3" name="subAmenityUUID" ref="subAmenityUUID"
                                                     onChange={(e) => this.fetchDynamicForm(e)}
                                                     className="form-control">
