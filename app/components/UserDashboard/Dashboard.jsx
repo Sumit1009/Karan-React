@@ -165,9 +165,6 @@ class Dashboard extends React.Component {
             .then(response => response.json())
             .then(json => {
                 swal('Message', json.message);
-                // let tempList = this.state.result.taskList;
-                // delete tempList[task.currentIndex];
-                // this.setState({taskList: tempList});
                 this.closeMsg();
             });
     }

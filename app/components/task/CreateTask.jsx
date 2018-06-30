@@ -4,9 +4,7 @@ import '../Forms/Validation.scss';
 import serviceRequest from './Task.run';
 import BasicDetail from "../Common/BasicDetail";
 
-
 const url = '';
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 class CreateTask extends React.Component {
 
