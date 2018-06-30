@@ -10,42 +10,8 @@ class CreateTask extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-        this.state = {
-            result: {
-                subAmenityList: [],
-                staffList: [],
-                roomList: []
-            },
-            formContent: {
-                valueLabel: "",
-                quantityLabel: "",
-                whenToDeliverLabel: "",
-                descriptionLabel: "",
-                formElement: "",
-            },
-            dateList: [],
-            dateSelected: "",
-            showTimePicker: false
-        };
+        this.state = {};
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.fetchDynamicForm = this.fetchDynamicForm.bind(this);
-        this.changeDate = this.changeDate.bind(this);
-    }
-
-    fetchDynamicForm(event) {
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Auth-Token': BasicDetail.getAccessToken()
-            },
-            body: JSON.stringify({subAmenityId: this.refs.subAmenityUUID.value})
-        })
-            .then(response => response.json())
-            .then(json => {
-                this.setState({formContent: json});
-            });
     }
 
     componentWillMount() {
@@ -55,73 +21,8 @@ class CreateTask extends React.Component {
     componentDidMount() {
         taskRun();
 
-        let jsonObj = {};
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Auth-Token': BasicDetail.getAccessToken()
-            },
-            body: JSON.stringify({"access_token": BasicDetail.getAccessToken()})
-        })
-            .then(response => response.json())
-            .then(json => {
-                jsonObj = json;
-                console.log(json);
-                this.setState({result: jsonObj});
-                this.fetchDynamicForm()
-            });
-
-        let today = new Date();
-
-        let dates = [];
-        dates.push("ASAP");
-
-        console.log(dates);
-
-        this.setState({dateList: dates})
-
-
     }
 
-    changeDate() {
-
-        let val = this.refs.whenToDeliverDate.selectedIndex;
-        let today = new Date();
-
-        if (val === 0) {
-            this.setState({dateSelected: "", showTimePicker: false})
-        } else {
-            val--;
-            today.setDate(today.getDate() + val);
-            let date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-            this.setCurrentTime(today);
-            this.setState({dateSelected: date, showTimePicker: true})
-        }
-    }
-
-    setCurrentTime(today) {
-
-        let amOrPm = (today.getHours() < 12) ? "AM" : "PM";
-
-        let hours = (today.getHours() < 12) ? today.getHours() : today.getHours() - 12;
-        if (hours === 0)
-            hours = 12;
-        hours = ("0" + hours).slice(-2);        // to format the hours having 2 digits
-
-        let whenToDeliverTimeValue = hours + ":00 " + amOrPm;
-        console.log(whenToDeliverTimeValue);
-
-        this.refs.whenToDeliverTime.value = whenToDeliverTimeValue;
-
-        let increaseSelectedIndex = parseInt(today.getMinutes() / 15);
-        if (today.getMinutes() % 15 !== 0)
-            increaseSelectedIndex = increaseSelectedIndex + 1;
-        let selectedIndex = this.refs.whenToDeliverTime.selectedIndex + increaseSelectedIndex;
-        if (selectedIndex === 96)
-            selectedIndex = 0;
-        this.refs.whenToDeliverTime.selectedIndex = selectedIndex;
-    }
 
     handleSubmit(event) {
         event.preventDefault();
@@ -159,54 +60,12 @@ class CreateTask extends React.Component {
             this.refs.roomNo.value = '';
             if (this.refs.quantity)
                 this.refs.quantity.value = '';
-            this.refs.whenToDeliverDate.selectedIndex = 0;
-            this.setState({showTimePicker: false})
         });
     }
 
     render() {
 
         const {result} = this.state;
-        const {formContent} = this.state;
-
-        let descriptionLabel = this.state.descriptionLabel ? this.state.descriptionLabel : "Description";
-        let valueField = "";
-        let quantityField = "";
-        let whenToDeliverDate = "";
-        let whenToDeliverTime = "";
-        console.log(formContent);
-        if (formContent.valueLabel) {
-
-            console.log('inside iff----');
-            console.log(formContent.valueLabel);
-            console.log(formContent.formElement);
-            let valueInputField = "";
-            if (formContent.formElement === 'TEXT' || formContent.formElement === 'DATE') {
-                console.log('formElement TEXT');
-                valueInputField = <input type="text" name="value" ref="value" required=""
-                                         className="form-control"/>;
-            } else if (formContent.formElement === 'NUMBER') {
-                console.log('formElement NUMBER');
-                valueInputField = <input type="number" name="value" ref="value" required=""
-                                         className="form-control"/>;
-            } else if (formContent.formElement === 'SELECT_BOX') {
-                console.log('formElement SELECT_BOX');
-                valueInputField = <input type="text" name="value" ref="value" required=""
-                                         className="form-control"/>;
-            } else if (formContent.formElement === 'PHONE_NUMBER') {
-                console.log('formElement SELECT_BOX');
-                valueInputField = <input type="text" name="value" ref="value" required=""
-                                         className="form-control"/>;
-            } else if (formContent.formElement === 'AUTO_COMPLETE') {
-                console.log('formElement SELECT_BOX');
-                valueInputField = <input type="text" name="value" ref="value" required=""
-                                         className="form-control"/>;
-
-            }
-        }
-
-
-
 
         return (
             <section>
@@ -225,22 +84,6 @@ class CreateTask extends React.Component {
                                     <form style={{marginLeft: '25px', marginRight: '25px'}}>
 
                                         <div className="mda-form-group">
-                                            <label className="control-label">Task</label>
-                                            <select id="select2-3" name="subAmenityUUID" ref="subAmenityUUID"
-                                                    onChange={(e) => this.fetchDynamicForm(e)}
-                                                    className="form-control">
-                                                {Object.keys(result.subAmenityList).map(item => (
-                                                    <optgroup label={item}>
-                                                        {result.subAmenityList[item].map(subAmenity => (
-                                                            <option key={subAmenity.uuid}
-                                                                    value={subAmenity.uuid}>{subAmenity.name}</option>
-                                                        ))}
-                                                    </optgroup>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        <div className="mda-form-group">
                                             <label className="control-label">Assignee</label>
                                             <select id="select2-1" name="assignedToUUID" ref="assignedToUUID"
                                                     className="form-control">
@@ -257,13 +100,8 @@ class CreateTask extends React.Component {
                                                    className="form-control"/>
                                         </div>
 
-                                        {valueField}
-                                        {quantityField}
-                                        {whenToDeliverDate}
-                                        {whenToDeliverTime}
-
                                         <div className="mda-form-group">
-                                            <label className="control-label">{descriptionLabel}</label>
+                                            <label className="control-label">Description</label>
                                             <textarea placeholder="" name="description" ref="description"
                                                       className="form-control"/>
                                         </div>
@@ -274,16 +112,13 @@ class CreateTask extends React.Component {
                                                     className="btn btn-primary">Create
                                             </button>
                                         </div>
-                                        {/* END panel */}
                                     </form>
                                 </div>
                             </div>
-                            {/* END row */}
                         </div>
                     </div>
                 </div>
             </section>
-
         );
     }
 }

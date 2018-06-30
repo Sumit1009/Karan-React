@@ -78,7 +78,7 @@ class Dashboard extends React.Component {
             body: JSON.stringify({
                 taskId: taskId,
                 isDashboard: true,
-                status: this.refs.statusSubAmenity.value
+                status: this.refs.statusTask.value
             }),
         }).then(response => response.json()).then(json => {
             let tempList = this.state.result.taskList;
@@ -355,7 +355,7 @@ class Dashboard extends React.Component {
                                                 <div>
 
                                                     <select
-                                                        name="statusSubAmenity" ref="statusSubAmenity"
+                                                        name="statusTask" ref="statusTask"
                                                         value={task.status}
                                                         disabled={['CANCELLED', 'DELIVERED', ''].indexOf(task.status) > -1}
                                                         onChange={(e) => this.changeTaskStatus(task, e)}

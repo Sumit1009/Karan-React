@@ -67,13 +67,11 @@ class Login extends React.Component {
             <div className="layout-container">
                 <div className="page-container bg-grey-100">
                     <div className="container-full">
-                        <div className="container container-xs"><img src="img/theme/logo.png"
-                                                                     className="card mv-lg block-center img-responsive"
-                                                                     style={{height: '64px'}}/>
+                        <div className="container container-xs" style={{backgroundColor: 'white', marginTop: '100px'}}>
                             <form id="user-login" action="" name="loginForm" noValidate
                                   className="card b0 form-validate">
                                 <div className="card-heading">
-                                    <div className="card-title text-center">Login</div>
+                                    <div className="card-title text-center"><h2>Login</h2></div>
                                 </div>
                                 <div className="card-body">
                                     <div className="mda-form-group float-label mda-input-group">
@@ -99,9 +97,8 @@ class Login extends React.Component {
                                 </div>
                                 <button type="submit"
                                         style={{paddingBottom: '16px', paddingTop: '16px', color: 'white'}}
-                                        className="btn btn-warning btn-flat-custom"
-                                        onClick={(e) => this.handleSubmit(e)}>Login <span
-                                    className="btn-label btn-label-right"><i className="ion-arrow-right-c"></i></span>
+                                        className="btn btn-warning btn-flat-custom form-control"
+                                        onClick={(e) => this.handleSubmit(e)}>Login
                                 </button>
                             </form>
                         </div>

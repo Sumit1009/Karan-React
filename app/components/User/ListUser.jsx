@@ -12,25 +12,8 @@ class ListUser extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            showModalMsg: false,
-            result: {requestlist: []},
-            staffList: {
-                frontOfficeStaff: [],
-                backOfficeStaff: [],
-                floorManagerStaff: [],
-                staffMember: []
-            },
-            status: props.status,
-            sarActivitiesOfSar: [],
-            subAmenityRequest: {},
-            activePage: 1,
-            totalPages: 1,
-            max: 20
+            userList: [],
         };
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.changeSubAmenityRequestStatus = this.changeSubAmenityRequestStatus.bind(this);
-        this.handlePageChange = this.handlePageChange.bind(this);
-        this.loadData = this.loadData.bind(this);
     }
 
     componentWillMount() {
@@ -39,10 +22,10 @@ class ListUser extends React.Component {
 
     componentDidMount() {
 
-        this.loadData(0);
+        this.loadData();
     }
 
-    loadData(offset) {
+    loadData() {
         let jsonObj;
         let params = {
             status: this.state.status,
@@ -60,10 +43,7 @@ class ListUser extends React.Component {
             .then(response => response.json())
             .then(json => {
                 jsonObj = json;
-                let numberOfPages = Math.trunc((jsonObj.totalCount / this.state.max)) + ((jsonObj.totalCount % this.state.max === 0 ? 0 : 1));
-                console.log('numberOfPages---------' + (numberOfPages));
-                this.setState({result: jsonObj});
-                this.setState({totalPages: numberOfPages});
+
             });
     }
 
@@ -71,9 +51,9 @@ class ListUser extends React.Component {
         this.setState({showModalMsg: false});
     }
 
-    openMsg(subAmenityRequest, index) {
-        console.log(subAmenityRequest);
-        subAmenityRequest.currentIndex = index;
+    openMsg(userDetail, index) {
+        console.log(userDetail);
+        userDetail.currentIndex = index;
         fetch(url, {
             method: 'POST',
             headers: {
@@ -83,15 +63,15 @@ class ListUser extends React.Component {
         })
             .then(response => response.json())
             .then(json => {
-                this.setState({staffList: json});
-                this.setState({subAmenityRequest: subAmenityRequest});
+                this.setState({userList: json});
+                this.setState({userDetail: userDetail});
                 fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Auth-Token': BasicDetail.getAccessToken()
                     },
-                    body: JSON.stringify({"subAmenityRequestId": subAmenityRequest.uuid})
+                    body: JSON.stringify({"userDetailId": userDetail.uuid})
                 })
                     .then(response => response.json())
                     .then(json => {
@@ -101,10 +81,10 @@ class ListUser extends React.Component {
         this.setState({showModalMsg: true});
     }
 
-    closeTask(subAmenityRequest) {
+    closeTask(userDetail) {
 
         let params = {
-            subAmenityRequestId: subAmenityRequest.uuid
+            userDetailId: userDetail.uuid
         };
         fetch(url, {
             method: 'POST',
@@ -119,18 +99,18 @@ class ListUser extends React.Component {
                 swal('Message', json.message);
                 let tempList = this.state.result.requestlist;
                 this.closeMsg();
-                delete tempList[subAmenityRequest.currentIndex];
-                // tempList[subAmenityRequest.currentIndex].status = 'CLOSED';     // error occurred here
-                // tempList[subAmenityRequest.currentIndex].statusColorCode = "label label-warning";     // error occurred here
+                delete tempList[userDetail.currentIndex];
+                // tempList[userDetail.currentIndex].status = 'CLOSED';     // error occurred here
+                // tempList[userDetail.currentIndex].statusColorCode = "label label-warning";     // error occurred here
                 this.setState({requestlist: tempList});
             });
     }
 
-    changeSubAmenityRequestStatus(subAmenityRequest, event) {
+    changeuserDetailStatus(userDetail, event) {
 
         event.preventDefault();
-        let subAmenityRequestId = subAmenityRequest.uuid;
-        console.log('changeSubAmenityRequestStatus called--------------' + this.refs.statusSubAmenity.value);
+        let userDetailId = userDetail.uuid;
+        console.log('changeuserDetailStatus called--------------' + this.refs.statusSubAmenity.value);
 
         fetch(url, {
             method: 'POST',
@@ -138,22 +118,22 @@ class ListUser extends React.Component {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
-            body: JSON.stringify({subAmenityRequestId: subAmenityRequestId, status: this.refs.statusSubAmenity.value}),
+            body: JSON.stringify({userDetailId: userDetailId, status: this.refs.statusSubAmenity.value}),
         }).then(response => response.json()).then(json => {
             let tempList = this.state.result.requestlist;
             if (this.state.status === 'ALL') {
-                tempList.splice(subAmenityRequest.currentIndex, 1, json.subAmenityRequest);
+                tempList.splice(userDetail.currentIndex, 1, json.userDetail);
             } else {
-                delete tempList[subAmenityRequest.currentIndex];
+                delete tempList[userDetail.currentIndex];
             }
             this.setState({requestlist: tempList});
             this.closeMsg();
         });
     }
 
-    handleSubmit(subAmenityRequest, event) {
+    handleSubmit(userDetail, event) {
         event.preventDefault();
-        let subAmenityRequestId = subAmenityRequest.uuid;
+        let userDetailId = userDetail.uuid;
         let staffMemberId = this.refs.staffMemberId.value;
 
         fetch(url, {
@@ -162,13 +142,13 @@ class ListUser extends React.Component {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
-            body: JSON.stringify({staffMemberId: staffMemberId, subAmenityRequestId: subAmenityRequestId}),
+            body: JSON.stringify({staffMemberId: staffMemberId, userDetailId: userDetailId}),
         }).then(response => response.json()).then(json => {
             let tempList = this.state.result.requestlist;
             if (this.state.status === 'ALL') {
-                tempList.splice(subAmenityRequest.currentIndex, 1, json.subAmenityRequest);
+                tempList.splice(userDetail.currentIndex, 1, json.userDetail);
             } else {
-                delete tempList[subAmenityRequest.currentIndex];
+                delete tempList[userDetail.currentIndex];
             }
             this.setState({requestlist: tempList});
             this.closeMsg();
@@ -189,8 +169,8 @@ class ListUser extends React.Component {
     render() {
 
         const {result} = this.state;
-        const {subAmenityRequest} = this.state;
-        const {staffList} = this.state;
+        const {userDetail} = this.state;
+        const {userList} = this.state;
         const {sarActivitiesOfSar} = this.state;
 
         let valueDiv = '';
@@ -201,12 +181,12 @@ class ListUser extends React.Component {
 
         let grandTotal = 0;
 
-        if (subAmenityRequest.menuItemRequests)
-            Object.values(subAmenityRequest.menuItemRequests).forEach(function (item) {
+        if (userDetail.menuItemRequests)
+            Object.values(userDetail.menuItemRequests).forEach(function (item) {
                 grandTotal = grandTotal + item.price * item.quantity
             });
 
-        if (subAmenityRequest.menuItemRequests && subAmenityRequest.menuItemRequests.length > 0) {
+        if (userDetail.menuItemRequests && userDetail.menuItemRequests.length > 0) {
 
             menuItemRequestDiv = <div>
                 <hr/>
@@ -222,7 +202,7 @@ class ListUser extends React.Component {
                     </tr>
                     </thead>
                     <tbody>
-                    {subAmenityRequest.menuItemRequests.map((item, index) => (
+                    {userDetail.menuItemRequests.map((item, index) => (
                         <tr key={index} className="msg-display ">
                             <td>{item.name}</td>
                             <td>{item.price}</td>
@@ -239,61 +219,61 @@ class ListUser extends React.Component {
             </div>
         }
 
-        if (subAmenityRequest.descriptionLabel !== null) {
+        if (userDetail.descriptionLabel !== null) {
             descriptionDiv = <fieldset>
                 <div className="form-group">
-                    <label>{subAmenityRequest.descriptionLabel}</label>
+                    <label>{userDetail.descriptionLabel}</label>
                     <div>
                                                         <textarea placeholder="" disabled name="description"
                                                                   ref="description"
                                                                   className="form-control"
-                                                                  value={subAmenityRequest.description || ''}/>
+                                                                  value={userDetail.description || ''}/>
                     </div>
                 </div>
             </fieldset>;
         }
 
-        if (subAmenityRequest.quantityLabel !== null) {
+        if (userDetail.quantityLabel !== null) {
             quantityDiv = <fieldset>
                 <div className="form-group">
-                    <label>{subAmenityRequest.quantityLabel}</label>
+                    <label>{userDetail.quantityLabel}</label>
                     <div>
                         <input type="text" disabled name="quantity" ref="quantity"
                                className="form-control"
-                               value={subAmenityRequest.quantity || ''}/>
+                               value={userDetail.quantity || ''}/>
                     </div>
                 </div>
             </fieldset>;
         }
 
-        if (subAmenityRequest.whenToDeliverLabel !== null) {
+        if (userDetail.whenToDeliverLabel !== null) {
             whenToDeliverDiv = <fieldset>
                 <div className="form-group">
-                    <label>{subAmenityRequest.whenToDeliverLabel}</label>
+                    <label>{userDetail.whenToDeliverLabel}</label>
                     <div>
                         <input type="text" disabled name="whenToDeliver" ref="whenToDeliver"
                                className="form-control"
-                               value={subAmenityRequest.whenToDeliver || ''}/>
+                               value={userDetail.whenToDeliver || ''}/>
                     </div>
                 </div>
             </fieldset>;
         }
 
-        if (subAmenityRequest.valueLabel !== null) {
+        if (userDetail.valueLabel !== null) {
 
             valueDiv = <fieldset>
                 <div className="form-group">
-                    <label>{subAmenityRequest.valueLabel}</label>
+                    <label>{userDetail.valueLabel}</label>
                     <div>
                         <input type="text" disabled name="value" ref="value"
                                className="form-control"
-                               value={subAmenityRequest.value || ''}/>
+                               value={userDetail.value || ''}/>
                     </div>
                 </div>
             </fieldset>;
         }
 
-        let assignToDropdownDisabled = ((subAmenityRequest.status === 'INITIALIZED' || subAmenityRequest.status === 'ASSIGNED' || subAmenityRequest.status === 'ONGOING') ) ? '' : 'disabled';
+        let assignToDropdownDisabled = ((userDetail.status === 'INITIALIZED' || userDetail.status === 'ASSIGNED' || userDetail.status === 'ONGOING') ) ? '' : 'disabled';
 
         return (
             <section>
@@ -350,14 +330,7 @@ class ListUser extends React.Component {
                             <div className="row" style={{marginTop: '20px'}}>
                                 <div className="col-lg-8">
                                     <div style={{fontSize: '18px', display: 'inline-block'}}
-                                         className={subAmenityRequest.statusColorCode}> {subAmenityRequest.status || ''} </div>
-                                </div>
-                                <div className="col-lg-4">
-                                    <button
-                                        className={"btn btn-warning " + ("DELIVERED" === subAmenityRequest.status ? "" : "hidden")}
-                                        onClick={this.closeTask.bind(this, subAmenityRequest)}>Close Service
-                                        Request
-                                    </button>
+                                         className={userDetail.statusColorCode}> {userDetail.status || ''} </div>
                                 </div>
                             </div>
                         </Modal.Header>
@@ -370,28 +343,28 @@ class ListUser extends React.Component {
                                             <div className="form-group">
                                                 <label>Assign To</label>
                                                 <div>
-                                                    <select id="staffMemberId" value={subAmenityRequest.assignedToId}
+                                                    <select id="staffMemberId" value={userDetail.assignedToId}
                                                             disabled={assignToDropdownDisabled} name="staffMemberId"
                                                             ref="staffMemberId"
-                                                            onChange={(e) => this.handleSubmit(subAmenityRequest, e)}
+                                                            onChange={(e) => this.handleSubmit(userDetail, e)}
                                                             className="form-control">
                                                         <optgroup label="Front Office">
-                                                            {staffList.frontOfficeStaff.map(item => (
+                                                            {userList.frontOfficeStaff.map(item => (
                                                                 <option value={item.uuid}>{item.name}</option>
                                                             ))}
                                                         </optgroup>
                                                         <optgroup label="Back Office">
-                                                            {staffList.backOfficeStaff.map(item => (
+                                                            {userList.backOfficeStaff.map(item => (
                                                                 <option value={item.uuid}>{item.name}</option>
                                                             ))}
                                                         </optgroup>
                                                         <optgroup label="Floor Manager">
-                                                            {staffList.floorManagerStaff.map(item => (
+                                                            {userList.floorManagerStaff.map(item => (
                                                                 <option value={item.uuid}>{item.name}</option>
                                                             ))}
                                                         </optgroup>
                                                         <optgroup label="Staff Member">
-                                                            {staffList.staffMember.map(item => (
+                                                            {userList.staffMember.map(item => (
                                                                 <option value={item.uuid}>{item.name}</option>
                                                             ))}
                                                         </optgroup>
@@ -407,7 +380,7 @@ class ListUser extends React.Component {
                                                     <input type="text" disabled placeholder="" name="amenity"
                                                            ref="amenity"
                                                            className="form-control"
-                                                           value={subAmenityRequest.amenityName || ''}/>
+                                                           value={userDetail.amenityName || ''}/>
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -417,7 +390,7 @@ class ListUser extends React.Component {
                                                 <div>
                                                     <input type="text" disabled name="subAmenity" ref="subAmenity"
                                                            className="form-control"
-                                                           value={subAmenityRequest.subAmenityName || ''}/>
+                                                           value={userDetail.subAmenityName || ''}/>
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -434,9 +407,9 @@ class ListUser extends React.Component {
 
                                                     <select
                                                         name="statusSubAmenity" ref="statusSubAmenity"
-                                                        value={subAmenityRequest.status}
-                                                        disabled={['CANCELLED', 'DELIVERED', ''].indexOf(subAmenityRequest.status) > -1}
-                                                        onChange={(e) => this.changeSubAmenityRequestStatus(subAmenityRequest, e)}
+                                                        value={userDetail.status}
+                                                        disabled={['CANCELLED', 'DELIVERED', ''].indexOf(userDetail.status) > -1}
+                                                        onChange={(e) => this.changeuserDetailStatus(userDetail, e)}
                                                         className="form-control">
 
                                                         <option value="INITIALIZED" hidden>INITIALIZED</option>
@@ -447,19 +420,19 @@ class ListUser extends React.Component {
 
 
                                                         <option value="ASSIGNED"
-                                                                hidden={(['INITIALIZED', 'ONGOING'].indexOf(subAmenityRequest.status) === -1) || subAmenityRequest.status === 'ASSIGNED'}>
+                                                                hidden={(['INITIALIZED', 'ONGOING'].indexOf(userDetail.status) === -1) || userDetail.status === 'ASSIGNED'}>
                                                             ASSIGNED
                                                         </option>
                                                         <option value="ONGOING"
-                                                                hidden={subAmenityRequest.status === 'ONGOING'}>
+                                                                hidden={userDetail.status === 'ONGOING'}>
                                                             ONGOING
                                                         </option>
                                                         <option value="DELIVERED"
-                                                                hidden={(['ONGOING'].indexOf(subAmenityRequest.status) === -1) || subAmenityRequest.status === 'DELIVERED'}>
+                                                                hidden={(['ONGOING'].indexOf(userDetail.status) === -1) || userDetail.status === 'DELIVERED'}>
                                                             DELIVERED
                                                         </option>
                                                         <option value="REJECTED"
-                                                                hidden={subAmenityRequest.status === 'REJECTED'}>
+                                                                hidden={userDetail.status === 'REJECTED'}>
                                                             REJECTED
                                                         </option>
                                                     </select>
@@ -472,7 +445,7 @@ class ListUser extends React.Component {
                                                 <div>
                                                     <input type="text" disabled name="roomNumber" ref="roomNumber"
                                                            className="form-control"
-                                                           value={subAmenityRequest.roomNumber || ''}/>
+                                                           value={userDetail.roomNumber || ''}/>
                                                 </div>
                                             </div>
                                         </fieldset>
