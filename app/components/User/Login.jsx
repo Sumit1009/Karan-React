@@ -3,6 +3,8 @@ import React from 'react';
 import LoginRun from './Login.run';
 import BasicDetail from "../Common/BasicDetail";
 import {BASE_URL} from "../Utils/Constants";
+import firebase from 'firebase'
+import { connect } from 'react-firebase'
 
 let config = {
     apiKey: "AIzaSyCddMlMdUNhWSVkY0gNVL1uujAw1Sintvw",
@@ -12,7 +14,7 @@ let config = {
     storageBucket: "api-project-599410676779.appspot.com",
     messagingSenderId: "599410676779"
 };
-firebase.initializeApp(config);
+
 
 class Login extends React.Component {
 
@@ -21,6 +23,10 @@ class Login extends React.Component {
     }
 
     componentDidMount() {
+
+        firebase.initializeApp(config);
+
+
         LoginRun((form) => {
 
             let data = {
