@@ -12,7 +12,7 @@ class CreateTask extends React.Component {
         super(props, context);
         this.state = {
             userList: []
-        }
+        };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -38,7 +38,9 @@ class CreateTask extends React.Component {
             data.whenToDeliver = this.state.dateSelected + ' ' + this.refs.whenToDeliverTime.value;
         data.description = this.refs.description.value;
         data = Object.assign(data, {
-            'assignedToUUID': this.refs.assignedToUUID.value
+            'taskName': this.refs.taskName.value,
+            'description': this.refs.description.value,
+            'assignedTo': this.refs.assignedTo.value,
         });
 
         console.log('data----------' + data);
@@ -66,6 +68,7 @@ class CreateTask extends React.Component {
     render() {
 
 
+
         return (
             <section>
 
@@ -79,12 +82,13 @@ class CreateTask extends React.Component {
                                         <legend>Create Task</legend>
                                     </fieldset>
                                 </div>
+
                                 <div className="col-md-12">
                                     <form style={{marginLeft: '25px', marginRight: '25px'}}>
-
                                         <div className="mda-form-group">
                                             <label className="control-label">Assignee</label>
                                             <select id="select2-1" name="assignedToUUID" ref="assignedToUUID"
+
                                                     className="form-control">
                                                 {this.state.userList.map(item => (
                                                     <option key={item.uuid}
@@ -93,9 +97,9 @@ class CreateTask extends React.Component {
                                             </select>
                                         </div>
                                         <div className="mda-form-group">
-                                            <label className="control-label">Room number</label>
-                                            <input type="text" name="roomNo" ref="roomNo"
-                                                   placeholder="Please enter room number"
+                                            <label className="control-label">Description</label>
+                                            <input type="text" name="description" ref="description"
+                                                   placeholder="Description"
                                                    className="form-control"/>
                                         </div>
 
@@ -104,7 +108,6 @@ class CreateTask extends React.Component {
                                             <textarea placeholder="" name="description" ref="description"
                                                       className="form-control"/>
                                         </div>
-
                                         <hr/>
                                         <div className="text-center">
                                             <button type="submit" onClick={this.handleSubmit}
