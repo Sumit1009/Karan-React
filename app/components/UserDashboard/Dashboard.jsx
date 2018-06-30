@@ -4,6 +4,7 @@ import {Col, Modal, Row, Table} from 'react-bootstrap';
 import {Link} from 'react-router'
 import BasicDetail from "../Common/BasicDetail";
 import {toastr} from 'react-redux-toastr'
+import {BASE_URL} from "../Utils/Constants";
 
 const url = '';
 
@@ -29,17 +30,17 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
 
-        fetch(url, {
+        fetch(BASE_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
-            body: JSON.stringify({"access_token": BasicDetail.getAccessToken()})
         })
             .then(response => response.json())
             .then(json => {
-                this.setState({result: json});
+                // this.setState({result: json});
+                console.log(json);
 
             });
     }

@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8080/";
+const BASE_URL = "http://staging.uploan.ph/reactJS/fetchAllTasks";
 const BASE_URL_STAFF = BASE_URL + 'api/v1/staff/';
 const BASE_URL_PREMISE = BASE_URL + 'api/v1/premise/';
 const BASE_URL_SUB_AMENITY_REQUEST = BASE_URL + 'api/v1/subAmenityRequest/';

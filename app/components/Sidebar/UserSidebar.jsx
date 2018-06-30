@@ -42,7 +42,7 @@ class UserSidebar extends React.Component {
                     <div className="sidebar-toolbar text-center">
                         <a href=""><img src="img/user/01.jpg" style={{height: '55px', width: 'auto'}} alt="Profile"
                                         className="img-circle thumb64"/></a>
-                        <div className="mt">Welcome, {BasicDetail.getFullName()}</div>
+                        <div className="mt">Welcome to Fasana</div>
                     </div>
                     <nav className="sidebar-nav">
                         <ul>
@@ -70,6 +70,14 @@ class UserSidebar extends React.Component {
                                     <img src="" data-svg-replace="img/icons/aperture.svg" alt="MenuItem"
                                          className="hidden"/></span>
                                     <span>Create User</span>
+                                </Link>
+                            </li>
+                            <li className={this.routeActive('create-task') ? 'active' : ''}>
+                                <Link to="create-task" className="ripple">
+                                    <span className="nav-icon">
+                                    <img src="" data-svg-replace="img/icons/aperture.svg" alt="MenuItem"
+                                         className="hidden"/></span>
+                                    <span>Create Task</span>
                                 </Link>
                             </li>
 

@@ -10,7 +10,9 @@ class CreateTask extends React.Component {
 
     constructor(props, context) {
         super(props, context);
-        this.state = {};
+        this.state = {
+            userList: []
+        }
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -36,9 +38,7 @@ class CreateTask extends React.Component {
             data.whenToDeliver = this.state.dateSelected + ' ' + this.refs.whenToDeliverTime.value;
         data.description = this.refs.description.value;
         data = Object.assign(data, {
-            'roomNo': this.refs.roomNo.value,
-            'subAmenityUUID': this.refs.subAmenityUUID.value,
-            'assignedToUUID': this.refs.assignedToUUID.value,
+            'assignedToUUID': this.refs.assignedToUUID.value
         });
 
         console.log('data----------' + data);
@@ -65,7 +65,6 @@ class CreateTask extends React.Component {
 
     render() {
 
-        const {result} = this.state;
 
         return (
             <section>
@@ -87,7 +86,7 @@ class CreateTask extends React.Component {
                                             <label className="control-label">Assignee</label>
                                             <select id="select2-1" name="assignedToUUID" ref="assignedToUUID"
                                                     className="form-control">
-                                                {result.staffList.map(item => (
+                                                {this.state.userList.map(item => (
                                                     <option key={item.uuid}
                                                             value={item.uuid}>{item.name}</option>
                                                 ))}
