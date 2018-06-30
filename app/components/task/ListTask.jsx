@@ -3,15 +3,9 @@ import pubsub from 'pubsub-js';
 import {Grid, Row, Col, Table, Modal} from 'react-bootstrap';
 import BasicDetail from "../Common/BasicDetail";
 import {Pagination} from 'react-bootstrap';
-import {BASE_URL_STAFF, BASE_URL_SUB_AMENITY_REQUEST} from "../Utils/Constants";
 import {activityDetail} from "../Common/ActivityStatusText";
 
-const fetchSubAmenityRequestListUrl = BASE_URL_SUB_AMENITY_REQUEST + 'fetchSubAmenityRequestList';
-const listAllStaffUrl = BASE_URL_STAFF + 'listAllStaff';
-const closeSubAmenityRequestUrl = BASE_URL_STAFF + 'closeSubAmenityRequest';
-const fetchSarActivityListUrl = BASE_URL_STAFF + 'fetchSarActivityList';
-const assignRequestToStaffMemberUrl = BASE_URL_STAFF + 'assignRequestToStaffMember';
-const changeSubAmenityRequestStatusUrl = BASE_URL_STAFF + 'changeSubAmenityRequestStatus';
+const url = '';
 
 class ListServiceRequest extends React.Component {
 
@@ -55,7 +49,7 @@ class ListServiceRequest extends React.Component {
             max: this.state.max,
             offset: offset
         };
-        fetch(fetchSubAmenityRequestListUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +74,7 @@ class ListServiceRequest extends React.Component {
     openMsg(subAmenityRequest, index) {
         console.log(subAmenityRequest);
         subAmenityRequest.currentIndex = index;
-        fetch(listAllStaffUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -91,7 +85,7 @@ class ListServiceRequest extends React.Component {
             .then(json => {
                 this.setState({staffList: json});
                 this.setState({subAmenityRequest: subAmenityRequest});
-                fetch(fetchSarActivityListUrl, {
+                fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -112,7 +106,7 @@ class ListServiceRequest extends React.Component {
         let params = {
             subAmenityRequestId: subAmenityRequest.uuid
         };
-        fetch(closeSubAmenityRequestUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -138,7 +132,7 @@ class ListServiceRequest extends React.Component {
         let subAmenityRequestId = subAmenityRequest.uuid;
         console.log('changeSubAmenityRequestStatus called--------------' + this.refs.statusSubAmenity.value);
 
-        fetch(changeSubAmenityRequestStatusUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -162,7 +156,7 @@ class ListServiceRequest extends React.Component {
         let subAmenityRequestId = subAmenityRequest.uuid;
         let staffMemberId = this.refs.staffMemberId.value;
 
-        fetch(assignRequestToStaffMemberUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
