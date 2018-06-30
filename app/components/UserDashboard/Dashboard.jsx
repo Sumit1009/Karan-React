@@ -4,7 +4,7 @@ import {Col, Modal, Row, Table} from 'react-bootstrap';
 import {Link} from 'react-router'
 import BasicDetail from "../Common/BasicDetail";
 import {toastr} from 'react-redux-toastr'
-import {BASE_URL} from "../Utils/Constants";
+import {BASE_URL_DASHBOARD} from "../Utils/Constants";
 
 const url = '';
 
@@ -30,11 +30,11 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
 
-        fetch(BASE_URL, {
+        fetch(BASE_URL_DASHBOARD, {
             method: 'POST',
             headers: {
 
-                
+
             },
         })
             .then(response => response.json())
@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
         event.preventDefault();
         let taskId = task.taskId;
 
-        fetch(url, {
+        fetch(BASE_URL_DASHBOARD, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

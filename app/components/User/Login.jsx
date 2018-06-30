@@ -96,7 +96,12 @@ class Login extends React.Component {
                                     </div>
                                 </div>
                                 <button type="submit"
-                                        style={{paddingBottom: '16px', paddingTop: '6px', marginBottom: '10px', color: 'white'}}
+                                        style={{
+                                            paddingBottom: '16px',
+                                            paddingTop: '6px',
+                                            marginBottom: '10px',
+                                            color: 'white'
+                                        }}
                                         className="btn btn-warning btn-flat-custom form-control"
                                         onClick={(e) => this.handleSubmit(e)}>Login
                                 </button>
