@@ -24,7 +24,7 @@ class Login extends React.Component {
         super(props, context);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.temp = this.temp.bind(this);
-        t = this;
+
 
     }
 
@@ -37,22 +37,11 @@ class Login extends React.Component {
             "password": this.refs.password.value
         };
 
+        t = this;
         firebase.auth().signInWithEmailAndPassword(data.username, data.password).then(function (response) {
             console.log(response);
             console.log('success');
             console.log(response.user.h.b);
-
-
-            let user = firebase.auth().currentUser;
-
-            alert(user);
-            user.getIdToken(true).then(function (idToken) {
-
-                document.getElementById("email").value = idToken;
-                localStorage.setItem("lastname", idToken);
-            }).catch(function (error) {
-                alert(":ERROR");
-            });
             BasicDetail.setAccessToken(response.user.h.b);
             t.context.router.push('/dashboard');
         }).catch(function (error) {
