@@ -42,8 +42,10 @@ class Login extends React.Component {
             console.log(response);
             console.log('success');
             console.log(response.user.h.b);
-            BasicDetail.setAccessToken(response.user.h.b);
             t.context.router.push('/dashboard');
+            console.log('111');
+            BasicDetail.setAccessToken(response.user.h.b);
+            console.log('222');
         }).catch(function (error) {
             console.log('error occurred in firebase-------------------------');
             console.log(error);

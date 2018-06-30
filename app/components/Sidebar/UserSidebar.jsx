@@ -36,8 +36,7 @@ class UserSidebar extends React.Component {
                     <Link to="/dashboard" className="sidebar-header-logo"><img src="img/logo.png"
                                                                                data-svg-replace="img/logo.svg"
                                                                                alt="Logo"/><span
-                        className="sidebar-header-logo-text"><img style={{height: '55px', width: 'auto'}}
-                                                                  src="img/theme/HalloGuest_Logo_White.png"/></span></Link>
+                        className="sidebar-header-logo-text"></span></Link>
                 </div>
                 <div className="sidebar-content">
                     <div className="sidebar-toolbar text-center">

@@ -68,7 +68,7 @@ class ParentComponent extends React.Component {
                         </div>
 
                         <footer>
-                            <span>2018 - HalloGuest app.</span>
+                            <span>June 2018, Hackathon React JS</span>
                         </footer>
                     </ReactCSSTransitionGroup>
                 </div>

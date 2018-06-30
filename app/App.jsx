@@ -5,7 +5,6 @@ import {Route} from 'react-router-dom';
 import {createHistory} from 'history'
 
 import Core from './components/Core/Core';
-import Translate from './components/Translate/Translate';
 
 import StaffMembers from "./components/Member/Members";
 import CreateServiceRequest from './components/task/CreateTask';
@@ -14,8 +13,8 @@ import ListServiceRequest from './components/task/ListTask';
 import Landing from "./components/UserDashboard/Landing";
 import Dashboard from "./components/UserDashboard/Dashboard";
 import Login from "./components/User/Login";
+import CreateUser from "./components/User/CreateUser";
 
-Translate();
 
 $(() => {
     $(document).on('click', '[href=""],[href="#"]', () => {
@@ -42,7 +41,7 @@ ReactDOM.render(
 
             <Route path="user">
 
-                <Route path="create" component={CreateServiceRequest}/>
+                <Route path="create" component={CreateUser}/>
                 <Route path="list" component={CreateServiceRequest}/>
             </Route>
 
