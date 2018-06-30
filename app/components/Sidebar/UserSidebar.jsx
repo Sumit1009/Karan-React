@@ -55,7 +55,7 @@ class UserSidebar extends React.Component {
                                 </Link>
                             </li>
                             <li className={this.routeActive('/user/list') ? 'active' : ''}>
-                                <Link to="delivered-requests" className="ripple">
+                                <Link to="/user/list" className="ripple">
                                     <span className="pull-right nav-label">
                                         {/*<span className="badge bg-primary">2</span>*/}
                                     </span><span className="nav-icon">
@@ -64,18 +64,14 @@ class UserSidebar extends React.Component {
                                     <span>Users</span>
                                 </Link>
                             </li>
-                            <li className={this.routeActive('all-tasks') ? 'active' : ''}>
-                                <Link to="all-requests" className="ripple">
+                            <li className={this.routeActive('user/create') ? 'active' : ''}>
+                                <Link to="user/create" className="ripple">
                                     <span className="nav-icon">
                                     <img src="" data-svg-replace="img/icons/aperture.svg" alt="MenuItem"
                                          className="hidden"/></span>
                                     <span>Create User</span>
                                 </Link>
                             </li>
-
-
-
-
 
                         </ul>
                     </nav>

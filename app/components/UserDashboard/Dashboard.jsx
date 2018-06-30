@@ -15,16 +15,11 @@ class Dashboard extends React.Component {
             showModalMsg: false,
             result: {
                 taskList: [],
-                sarActivityList: [],
-
-            }
+            },
+            task: {},
+            userList: []
         };
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.onTaskAssigned = this.onTaskAssigned.bind(this);
-        this.onTaskDelivered = this.onTaskDelivered.bind(this);
-        this.onTaskDenied = this.onTaskDenied.bind(this);
-        this.onTaskCancelled = this.onTaskCancelled.bind(this);
-        this.onActivityAdded = this.onActivityAdded.bind(this);
         this.changeTaskStatus = this.changeTaskStatus.bind(this);
     }
 
@@ -59,7 +54,7 @@ class Dashboard extends React.Component {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
-            body: JSON.stringify({ taskId: taskId}),
+            body: JSON.stringify({taskId: taskId}),
         }).then(response => response.json()).then(json => {
             // swal('Message', json.message);
             let tempList = this.state.result.taskList;
@@ -167,73 +162,10 @@ class Dashboard extends React.Component {
             });
     }
 
-    onTaskAssigned(task) {
-
-        let tempList = this.state.result.taskList;
-        tempList.unshift(task);
-        this.setState({taskList: tempList});
-        toastr.warning('Message', 'A new request has been initialized by guest');
-    }
-
-    onTaskDelivered(task) {
-
-        toastr.warning('Message', 'A service request has been delivered');
-        let tempList = this.state.result.taskList;
-        for (let i = 0; i < tempList.length; i++) {
-            if (tempList[i].taskId === task.taskId) {
-                tempList[i] = task;
-                break;
-            }
-        }
-        this.setState({taskList: tempList});
-    }
-
-    onTaskDenied(task) {
-
-        toastr.warning('Message', 'A service request has been denied and assigned back to you.');
-        let tempList = this.state.result.taskList;
-        for (let i = 0; i < tempList.length; i++) {
-            if (tempList[i].taskId === task.taskId) {
-                tempList[i] = task;
-                break;
-            }
-        }
-        this.setState({taskList: tempList});
-    }
-
-    onActivityAdded(taskActivity) {
-
-        let tempList = this.state.result.sarActivityList;
-        tempList.unshift(taskActivity);
-        this.setState({sarActivityList: tempList});
-
-
-        toastr.warning('Message', 'A new activity has been added');
-    }
-
-    onTaskCancelled(taskActivity) {
-
-        let tempList = this.state.result.sarActivityList;
-        tempList.unshift(taskActivity);
-        this.setState({sarActivityList: tempList});
-        toastr.warning('Message', 'A task has been cancelled by guest.');
-
-        this.state.result.taskList.map((item, index) => {
-
-            if (item.taskId === taskActivity.sarId) {
-
-                let temp = this.state.result.taskList;
-                delete temp[index];
-                this.setState({taskList: temp});
-                return true;
-            }
-        })
-    }
-
     render() {
 
         const {result} = this.state;
-        const {staffList} = this.state;
+        const {userList} = this.state;
         const {task} = this.state;
         const {sarActivitiesOfSar} = this.state;
 
@@ -241,45 +173,8 @@ class Dashboard extends React.Component {
         let quantityDiv = '';
         let whenToDeliverDiv = '';
         let descriptionDiv = '';
-        let menuItemRequestDiv;
 
         let grandTotal = 0;
-
-        if (task.menuItemRequests)
-            Object.values(task.menuItemRequests).forEach(function (item) {
-                grandTotal = grandTotal + item.price * item.quantity
-            });
-
-        if (task.menuItemRequests && task.menuItemRequests.length > 0) {
-
-            menuItemRequestDiv = <div>
-                <hr/>
-                <h5>Menu Items Ordered</h5>
-
-                <Table responsive className="">
-                    <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Total</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {task.menuItemRequests.map((item, index) => (
-                        <tr key={index} className="msg-display ">
-                            <td>{item.name}</td>
-                            <td>{item.quantity}</td>
-
-                        </tr>
-                    ))}
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th>TOTAL:</th>
-                    </tr>
-                    </tbody>
-                </Table>
-            </div>
-        }
 
 
         if (task.descriptionLabel !== null) {
@@ -393,30 +288,7 @@ class Dashboard extends React.Component {
                                 </table>
                             </div>
                         </Col>
-                        <Col lg={4} xs={12}>
-                            {/* Activity feed */}
-                            <div className="card">
-                                <div className="card-heading">
-                                    <div className="card-title">Activities</div>
-                                    <small>What's people doing right now</small>
-                                </div>
-
-                                {result.sarActivityList.map(item => (
-                                    <div className="card-body bb clickable"
-                                         onClick={this.openMsg.bind(this, item.task, -1)}>
-                                        <p className="pull-left mr"><a href=""><img src="img/user/04.jpg" alt="User"
-                                                                                    className="img-circle thumb32"/></a>
-                                        </p>
-                                        <div>Type your text here</div>
-                                    </div>
-                                ))}
-
-
-                                <a href="" className="card-footer btn btn-flat btn-default">
-                                    <small className="text-center text-muted lh1">See more activities</small>
-                                </a>
-                            </div>
-                        </Col></Row>
+                    </Row>
 
                     <Modal show={this.state.showModalMsg} onHide={this.closeMsg.bind(this)}
                            className="modal-right modal-auto-size">
@@ -429,8 +301,7 @@ class Dashboard extends React.Component {
                                 <div className="col-lg-4">
                                     <button
                                         className={"btn btn-warning " + ("DELIVERED" === task.status ? "" : "hidden")}
-                                        onClick={this.closeTask.bind(this, task)}>Close Service
-                                        Request
+                                        onClick={this.closeTask.bind(this, task)}>Complete task
                                     </button>
                                 </div>
                             </div>
@@ -444,30 +315,14 @@ class Dashboard extends React.Component {
                                             <div className="form-group">
                                                 <label>Assign To</label>
                                                 <div className="">
-                                                    <select id="staffMemberId" value={task.assignedToId}
-                                                            name="staffMemberId" ref="staffMemberId"
+                                                    <select id="userId" value={task.assignedToId}
+                                                            name="userId" ref="userId"
                                                             onChange={(e) => this.handleSubmit(task, e)}
                                                             className="form-control">
-                                                        <optgroup label="Front Office">
-                                                            {staffList.frontOfficeStaff.map(item => (
-                                                                <option value={item.uuid}>{item.name}</option>
-                                                            ))}
-                                                        </optgroup>
-                                                        <optgroup label="Back Office">
-                                                            {staffList.backOfficeStaff.map(item => (
-                                                                <option value={item.uuid}>{item.name}</option>
-                                                            ))}
-                                                        </optgroup>
-                                                        <optgroup label="Floor Manager">
-                                                            {staffList.floorManagerStaff.map(item => (
-                                                                <option value={item.uuid}>{item.name}</option>
-                                                            ))}
-                                                        </optgroup>
-                                                        <optgroup label="Staff Member">
-                                                            {staffList.staffMember.map(item => (
-                                                                <option value={item.uuid}>{item.name}</option>
-                                                            ))}
-                                                        </optgroup>
+                                                        {userList.map(item => (
+                                                            <option value={item.uuid}>{item.name}</option>
+                                                        ))}
+
                                                     </select>
                                                 </div>
                                             </div>
@@ -543,22 +398,9 @@ class Dashboard extends React.Component {
                                     <hr/>
 
                                 </div>
-                                <div className="hidden visible-xs"><h5>Activities</h5></div>
-                                <div className="col-md-6 col-sm-12">
-                                    {sarActivitiesOfSar.map(item => (
-                                        <div className="card-body bb container-fluid">
-                                            <p className="pull-left mr"><img src="img/user/04.jpg" alt="User"
-                                                                             className="img-circle thumb32"/>
-                                            </p>
-                                            <div className="oh">
-                                                Type your text here
 
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
+
                             </div>
-                            {menuItemRequestDiv}
                         </Modal.Body>
                         <Modal.Footer>
                             {/*Footer*/}

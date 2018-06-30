@@ -7,7 +7,7 @@ import {activityDetail} from "../Common/ActivityStatusText";
 
 const url = '';
 
-class ListServiceRequest extends React.Component {
+class ListUser extends React.Component {
 
     constructor(props) {
         super(props);
@@ -34,7 +34,7 @@ class ListServiceRequest extends React.Component {
     }
 
     componentWillMount() {
-        pubsub.publish('setPageTitle', 'Service Requests');
+        pubsub.publish('setPageTitle', 'Users');
     }
 
     componentDidMount() {
@@ -511,4 +511,4 @@ class ListServiceRequest extends React.Component {
     }
 }
 
-export default ListServiceRequest;
+export default ListUser;

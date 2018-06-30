@@ -7,7 +7,7 @@ import {createHistory} from 'history'
 import Core from './components/Core/Core';
 
 import CreateTask from './components/task/CreateTask';
-import ListTask from './components/task/ListTask';
+import ListUser from './components/User/ListUser';
 
 import Landing from "./components/UserDashboard/Landing";
 import Dashboard from "./components/UserDashboard/Dashboard";
@@ -38,12 +38,11 @@ ReactDOM.render(
             <Route path="dashboard" component={Dashboard}/>
             <Route path="login" component={Login}/>
             <Route path="create-task" component={CreateTask}/>
-            <Route path="all-tasks" component={ListTask}/>
 
             <Route path="user">
 
                 <Route path="create" component={CreateUser}/>
-                <Route path="list" component={CreateTask}/>
+                <Route path="list" component={ListUser}/>
             </Route>
 
         </Route>
