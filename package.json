@@ -1,7 +1,7 @@
 {
-  "name": "centric",
+  "name": "Karan",
   "version": "0.0.0",
-  "description": "Centric - Bootstrap Admin App + ReactJS",
+  "description": "Karan",
   "author": "@themicon_co",
   "scripts": {
     "start": "webpack-dev-server --config webpack.dev.js --inline --progress --port 3000 --open",

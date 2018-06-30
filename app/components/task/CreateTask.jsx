@@ -20,7 +20,7 @@ const timeList = ["12:00", "12:15", "12:30", "12:45", "01:00", "01:15", "01:30",
     "06:00", "06:15", "06:30", "06:45", "07:00", "07:15", "07:30", "07:45", "08:00", "08:15", "08:30", "08:45",
     "09:00", "09:15", "09:30", "09:45", "10:00", "10:15", "10:30", "10:45", "11:00", "11:15", "11:30", "11:45"];
 
-class CreateServiceRequest extends React.Component {
+class CreateTask extends React.Component {
 
     constructor(props, context) {
         super(props, context);
@@ -355,4 +355,4 @@ class CreateServiceRequest extends React.Component {
     }
 }
 
-export default CreateServiceRequest;
+export default CreateTask;

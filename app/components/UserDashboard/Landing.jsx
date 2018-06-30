@@ -7,7 +7,7 @@ class Landing extends React.Component {
     componentWillMount() {
         pubsub.publish('setPageTitle', this.constructor.name);
         let alertMsg = 'You are not authorized to view this page';
-        if (BasicDetail.getRole() === 'ROLE_PREMISE_FRONT_OFFICE')
+        if (BasicDetail.getAccessToken())
             this.context.router.push('/dashboard');
         else{
             swal('Alert', alertMsg);

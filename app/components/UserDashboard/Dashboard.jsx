@@ -3,7 +3,6 @@ import pubsub from 'pubsub-js';
 import {Button, Col, Table, Modal, Row} from 'react-bootstrap';
 import {Link} from 'react-router'
 import BasicDetail from "../Common/BasicDetail";
-// import SockJS from "sockjs-client";
 import SockJsClient from 'react-stomp';
 import {BASE_URL_STAFF, WEB_SOCKET_STOMP_URL} from "../Utils/Constants";
 import {toastr} from 'react-redux-toastr'
@@ -15,7 +14,7 @@ const fetchSarActivityListUrl = BASE_URL_STAFF + 'fetchSarActivityList';
 const closeSubAmenityRequestUrl = BASE_URL_STAFF + 'closeSubAmenityRequest';
 const changeSubAmenityRequestStatusUrl = BASE_URL_STAFF + 'changeSubAmenityRequestStatus';
 
-class PremiseDashboard extends React.Component {
+class Dashboard extends React.Component {
 
     constructor() {
         super();
@@ -408,15 +407,10 @@ class PremiseDashboard extends React.Component {
                             <small>Manage all your tasks are here.</small>
                         </Col>
                         <Col sm={4} className="text-right">
-                            <Link to="/invite-guest" className="ripple">
+
+                            <Link to="/user/create" className="ripple">
                                 <button type="button" className="mt-sm btn btn-warning ripple"><i
-                                    className="ion-plus-round"></i> Invite Guest
-                                </button>
-                            </Link>
-                            &nbsp;
-                            <Link to="/service-requests/create" className="ripple">
-                                <button type="button" className="mt-sm btn btn-warning ripple"><i
-                                    className="ion-plus-round"></i> Create Request
+                                    className="ion-plus-round"></i> Create User
                                 </button>
                             </Link>
                         </Col>
@@ -634,4 +628,4 @@ class PremiseDashboard extends React.Component {
     }
 }
 
-export default PremiseDashboard;
+export default Dashboard;
