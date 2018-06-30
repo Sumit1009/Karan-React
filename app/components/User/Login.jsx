@@ -1,9 +1,18 @@
 import React from 'react';
-import {Link} from 'react-router'
 
 import LoginRun from './Login.run';
 import BasicDetail from "../Common/BasicDetail";
 import {BASE_URL} from "../Utils/Constants";
+
+let config = {
+    apiKey: "AIzaSyCddMlMdUNhWSVkY0gNVL1uujAw1Sintvw",
+    authDomain: "api-project-599410676779.firebaseapp.com",
+    databaseURL: "https://api-project-599410676779.firebaseio.com",
+    projectId: "api-project-599410676779",
+    storageBucket: "api-project-599410676779.appspot.com",
+    messagingSenderId: "599410676779"
+};
+firebase.initializeApp(config);
 
 class Login extends React.Component {
 
