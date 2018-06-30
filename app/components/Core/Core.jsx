@@ -6,7 +6,7 @@ import './LayoutVariants.scss';
 
 import Header from '../Header/Header';
 import HeaderSearch from '../Header/HeaderSearch';
-import PremiseSidebar from '../Sidebar/UserSidebar';
+import UserSidebar from '../Sidebar/UserSidebar';
 import BasicDetail from "../Common/BasicDetail";
 import Login from "../User/Login";
 import Layout from "../User/Layout";
@@ -24,7 +24,7 @@ const reducers = {
 const reducer = combineReducers(reducers);
 const store = createStore(reducer);
 
-class Core extends React.Component {
+class ParentComponent extends React.Component {
 
     componentDidMount() {
 
@@ -34,65 +34,56 @@ class Core extends React.Component {
 
     render() {
 
-        const animationName = 'rag-fadeIn';
-        let isLoggedIn = true;
 
         let leftNav = getSideBar();
 
-        // if (!BasicDetail.getAccessToken())
-        //     return (<Layout><Login/></Layout>);
-        // else
-
-
+        if (!BasicDetail.getAccessToken())
+            return (<Layout><Login/></Layout>);
+        else
             return (
-            <div className="layout-container">
+                <div className="layout-container">
 
-                <Header/>
+                    <Header/>
 
-                {leftNav}
-                <div className="sidebar-layout-obfuscator"></div>
+                    {leftNav}
+                    <div className="sidebar-layout-obfuscator"></div>
 
-                <ReactCSSTransitionGroup
-                    component="main"
-                    className="main-container"
-                    transitionName={animationName}
-                    transitionEnterTimeout={500}
-                    transitionLeaveTimeout={500}>
-                    <Provider store={store}>
-                        <div className="toastr-left-container">
-                            <ReduxToastr
-                                timeOut={4000}
-                                newestOnTop={false}
-                                position="top-right"
-                                transitionIn="fadeIn"
-                                transitionOut="fadeOut"/>
+                    <ReactCSSTransitionGroup
+                        component="main"
+                        className="main-container"
+                        transitionName={'rag-fadeIn'}
+                        transitionEnterTimeout={500}
+                        transitionLeaveTimeout={500}>
+                        <Provider store={store}>
+                            <div className="toastr-left-container">
+                                <ReduxToastr
+                                    timeOut={4000}
+                                    newestOnTop={false}
+                                    position="top-right"
+                                    transitionIn="fadeIn"
+                                    transitionOut="fadeOut"/>
+                            </div>
+                        </Provider>
+                        {React.cloneElement(this.props.children, {
+                            key: this.props.location.pathname
+                        })}
+
+                        <div ref="progressBar" className="floating -align-center">
+                            <div className="loader-inner ball-clip-rotate-pulse"></div>
                         </div>
-                    </Provider>
-                    {/* Page content */}
-                    {React.cloneElement(this.props.children, {
-                        key: this.props.location.pathname
-                    })}
 
-                    <div ref="progressBar" className="floating -align-center">
-                        <div className="loader-inner ball-clip-rotate-pulse"></div>
-                    </div>
-
-                    {/* Page footer */}
-                    <footer>
-                        <span>2018 - HalloGuest app.</span>
-                    </footer>
-                </ReactCSSTransitionGroup>
-
-                {/* Search template */}
-                <HeaderSearch/>
-
-            </div>
-        );
+                        <footer>
+                            <span>2018 - HalloGuest app.</span>
+                        </footer>
+                    </ReactCSSTransitionGroup>
+                    {/*<HeaderSearch/>*/}
+                </div>
+            );
     }
 }
 
 function getSideBar() {
-    return <PremiseSidebar/>
+    return <UserSidebar/>
 }
 
-export default Core;
+export default ParentComponent;

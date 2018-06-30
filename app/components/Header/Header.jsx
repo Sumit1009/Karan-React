@@ -1,8 +1,5 @@
 import React from 'react';
 import pubsub from 'pubsub-js';
-import {Dropdown, MenuItem} from 'react-bootstrap';
-import {LinkContainer} from 'react-router-bootstrap';
-import {Route, Router} from 'react-router';
 
 import './Header.scss';
 import './HeaderMenuLinks.scss';
@@ -41,16 +38,6 @@ class Header extends React.Component {
     logout() {
 
         console.log('logout called');
-        // swal({
-        //         title: 'Are you sure?',
-        //         // text: 'You will not be able to recover this imaginary file!',
-        //         type: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#DD6B55',
-        //         confirmButtonText: 'Yes',
-        //         closeOnConfirm: true
-        //     },
-        //     this.performLogout);
         this.performLogout();
     }
 
@@ -63,10 +50,10 @@ class Header extends React.Component {
             },
             body: JSON.stringify({})
         }).then(response => {
-                BasicDetail.clearAll();
-                console.log('logout executed');
-                this.context.router.push('/login');
-            });
+            BasicDetail.clearAll();
+            console.log('logout executed');
+            this.context.router.push('/login');
+        });
     }
 
     render() {
@@ -87,32 +74,12 @@ class Header extends React.Component {
 
                     <ul className="pull-right">
 
-                        <Dropdown id="basic-nav-dropdown" pullRight componentClass="li">
-                            <Dropdown.Toggle useAnchor noCaret className="has-badge ripple">
-                                <em className="ion-person"></em>
-                                {/*<sup className="badge bg-danger">3</sup>*/}
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu className="md-dropdown-menu">
-                                <LinkContainer to="pages/profile">
-                                    <MenuItem eventKey={3.1}>
-                                        <em className="ion-home icon-fw"></em>
-                                        Profile
-                                    </MenuItem>
-                                </LinkContainer>
-
-                                <MenuItem divider/>
-                                <LinkContainer to="/login">
-                                    <MenuItem eventKey={3.3}><em className="ion-log-out icon-fw"></em>Logout</MenuItem>
-                                </LinkContainer>
-                            </Dropdown.Menu>
-                        </Dropdown>
                         <li>
                             <a href="#" className="ripple" onClick={this.logout}>
                                 <em className="ion-log-out"></em>
                             </a>
                         </li>
                     </ul>
-
                 </nav>
             </header>
         );
