@@ -33,8 +33,8 @@ class Dashboard extends React.Component {
         fetch(BASE_URL, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'X-Auth-Token': BasicDetail.getAccessToken()
+
+                
             },
         })
             .then(response => response.json())
