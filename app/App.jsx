@@ -8,12 +8,12 @@ import Core from './components/Core/Core';
 import Translate from './components/Translate/Translate';
 
 import StaffMembers from "./components/Member/Members";
-import User from './components/User/User';
 import CreateServiceRequest from './components/task/CreateTask';
 import ListServiceRequest from './components/task/ListTask';
 
 import Landing from "./components/UserDashboard/Landing";
 import Dashboard from "./components/UserDashboard/Dashboard";
+import Login from "./components/User/Login";
 
 Translate();
 
@@ -38,6 +38,7 @@ ReactDOM.render(
             <IndexRoute component={Landing}/>
 
             <Route path="dashboard" component={Dashboard}/>
+            <Route path="login" component={Login}/>
 
             <Route path="user">
 
@@ -59,12 +60,6 @@ ReactDOM.render(
 
         </Route>
 
-        <Route path="/" component={User.Layout}>
-            <Route path="login" component={User.Login}/>
-            <Route path="signup" component={User.Signup}/>
-            <Route path="recover" component={User.Recover}/>
-            <Route path="lock" component={User.Lock}/>
-        </Route>
 
     </Router>,
     document.getElementById('app')

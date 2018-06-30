@@ -5,21 +5,17 @@ import './Core.scss';
 import './LayoutVariants.scss';
 
 import Header from '../Header/Header';
-import HeaderSearch from '../Header/HeaderSearch';
 import UserSidebar from '../Sidebar/UserSidebar';
 import BasicDetail from "../Common/BasicDetail";
 import Login from "../User/Login";
-import Layout from "../User/Layout";
 import {Provider} from 'react-redux'
-import ReduxToastr from 'react-redux-toastr'
+import ReduxToastr, {reducer as toastrReducer} from 'react-redux-toastr'
 
-import {createStore, combineReducers} from 'redux'
-import {reducer as toastrReducer} from 'react-redux-toastr'
+import {combineReducers, createStore} from 'redux'
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
 
 const reducers = {
-    // ... other reducers ...
-    toastr: toastrReducer // <- Mounted at toastr.
+    toastr: toastrReducer
 };
 const reducer = combineReducers(reducers);
 const store = createStore(reducer);
@@ -28,7 +24,6 @@ class ParentComponent extends React.Component {
 
     componentDidMount() {
 
-        // used for spinner
         require('../../../node_modules/loaders.css/loaders.css.js');
     }
 
@@ -38,7 +33,7 @@ class ParentComponent extends React.Component {
         let leftNav = getSideBar();
 
         if (!BasicDetail.getAccessToken())
-            return (<Layout><Login/></Layout>);
+            return (<Login/>);
         else
             return (
                 <div className="layout-container">
@@ -76,7 +71,6 @@ class ParentComponent extends React.Component {
                             <span>2018 - HalloGuest app.</span>
                         </footer>
                     </ReactCSSTransitionGroup>
-                    {/*<HeaderSearch/>*/}
                 </div>
             );
     }

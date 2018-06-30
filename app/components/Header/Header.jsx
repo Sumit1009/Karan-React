@@ -4,7 +4,6 @@ import pubsub from 'pubsub-js';
 import './Header.scss';
 import './HeaderMenuLinks.scss';
 import BasicDetail from "../Common/BasicDetail";
-import {BASE_URL} from "../Utils/Constants";
 
 class Header extends React.Component {
 
@@ -42,7 +41,7 @@ class Header extends React.Component {
     }
 
     performLogout() {
-        fetch(BASE_URL + 'api/v1/security/logout', {
+        fetch('', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

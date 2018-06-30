@@ -86,7 +86,6 @@ class ListServiceRequest extends React.Component {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
-            body: JSON.stringify({"premiseId": BasicDetail.getPremiseId()})
         })
             .then(response => response.json())
             .then(json => {
@@ -234,14 +233,12 @@ class ListServiceRequest extends React.Component {
                             <td>{item.name}</td>
                             <td>{item.price}</td>
                             <td>{item.quantity}</td>
-                            <td>{BasicDetail.getCurrencySymbolCode()} {item.price * item.quantity}</td>
                         </tr>
                     ))}
                     <tr>
                         <th></th>
                         <th></th>
                         <th>TOTAL:</th>
-                        <th>{BasicDetail.getCurrencySymbolCode()} {grandTotal}</th>
                     </tr>
                     </tbody>
                 </Table>

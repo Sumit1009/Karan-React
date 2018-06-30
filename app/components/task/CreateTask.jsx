@@ -1,18 +1,11 @@
 import React from 'react';
 import pubsub from 'pubsub-js';
-import {IndexRoute, Link, Route, Router, useRouterHistory} from 'react-router';
-import {createHistory} from 'history'
 import '../Forms/Validation.scss';
 import serviceRequest from './Task.run';
 import BasicDetail from "../Common/BasicDetail";
-import {BASE_URL_GUEST, BASE_URL_PREMISE, BASE_URL_SUB_AMENITY_REQUEST} from "../Utils/Constants";
-import FormsAdvancedRun from '../Forms/FormsAdvanced.run';
 
-const browserHistory = useRouterHistory(createHistory)({basename: REACT_BASE_HREF});
 
-const createSubAmenityRequestUrl = BASE_URL_SUB_AMENITY_REQUEST + 'createSubAmenityRequest';
-const fetchPremiseDetailsUrl = BASE_URL_PREMISE + 'fetchPremiseDetails';
-const dynamicFormForRequestUrl = BASE_URL_GUEST + 'dynamicFormForRequest';
+const url = '';
 const quantityList = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const timeList = ["12:00", "12:15", "12:30", "12:45", "01:00", "01:15", "01:30", "01:45", "02:00", "02:15", "02:30", "02:45",
@@ -48,7 +41,7 @@ class CreateTask extends React.Component {
 
     fetchDynamicForm(event) {
 
-        fetch(dynamicFormForRequestUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -72,7 +65,7 @@ class CreateTask extends React.Component {
         // initialize form data
 
         let jsonObj = {};
-        fetch(fetchPremiseDetailsUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -170,7 +163,7 @@ class CreateTask extends React.Component {
         // required params for this api -
         // assignedToUUID, subAmenityUUID, roomNo, deliveryTime(optional)
 
-        fetch(createSubAmenityRequestUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -286,7 +279,9 @@ class CreateTask extends React.Component {
                             {/* START row */}
                             <div className="row">
                                 <div className="col-md-12">
-                                    <fieldset><legend>Create Service Request</legend></fieldset>
+                                    <fieldset>
+                                        <legend>Create Service Request</legend>
+                                    </fieldset>
                                 </div>
                                 <div className="col-md-12">
                                     <form style={{marginLeft: '25px', marginRight: '25px'}}>

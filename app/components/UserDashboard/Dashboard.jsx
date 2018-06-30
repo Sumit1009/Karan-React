@@ -1,18 +1,11 @@
 import React from 'react';
 import pubsub from 'pubsub-js';
-import {Button, Col, Table, Modal, Row} from 'react-bootstrap';
+import {Col, Modal, Row, Table} from 'react-bootstrap';
 import {Link} from 'react-router'
 import BasicDetail from "../Common/BasicDetail";
-import SockJsClient from 'react-stomp';
-import {BASE_URL_STAFF, WEB_SOCKET_STOMP_URL} from "../Utils/Constants";
 import {toastr} from 'react-redux-toastr'
 
-const dashboardStaffPremiseUrl = BASE_URL_STAFF + 'dashboardStaffPremise';
-const assignRequestToStaffMemberUrl = BASE_URL_STAFF + 'assignRequestToStaffMember';
-const listAllStaffUrl = BASE_URL_STAFF + 'listAllStaff';
-const fetchSarActivityListUrl = BASE_URL_STAFF + 'fetchSarActivityList';
-const closeSubAmenityRequestUrl = BASE_URL_STAFF + 'closeSubAmenityRequest';
-const changeSubAmenityRequestStatusUrl = BASE_URL_STAFF + 'changeSubAmenityRequestStatus';
+const url = '';
 
 class Dashboard extends React.Component {
 
@@ -21,21 +14,10 @@ class Dashboard extends React.Component {
         this.state = {
             showModalMsg: false,
             result: {
-                sarList: [],
+                taskList: [],
                 sarActivityList: [],
-                newTasksCount: 0,
-                assignedTasksCount: 0,
-                completedTasksCount: 0,
-                delayedTasksCount: 0
-            },
-            staffList: {
-                frontOfficeStaff: [],
-                backOfficeStaff: [],
-                floorManagerStaff: [],
-                staffMember: []
-            },
-            sarActivitiesOfSar: [],
-            subAmenityRequest: {}
+
+            }
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onTaskAssigned = this.onTaskAssigned.bind(this);
@@ -43,7 +25,7 @@ class Dashboard extends React.Component {
         this.onTaskDenied = this.onTaskDenied.bind(this);
         this.onTaskCancelled = this.onTaskCancelled.bind(this);
         this.onActivityAdded = this.onActivityAdded.bind(this);
-        this.changeSubAmenityRequestStatus = this.changeSubAmenityRequestStatus.bind(this);
+        this.changeTaskStatus = this.changeTaskStatus.bind(this);
     }
 
     componentWillMount() {
@@ -52,7 +34,7 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
 
-        fetch(dashboardStaffPremiseUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,56 +45,55 @@ class Dashboard extends React.Component {
             .then(response => response.json())
             .then(json => {
                 this.setState({result: json});
-                BasicDetail.setCurrencySymbolCode(json.currencySymbolCode);
-                BasicDetail.setPremiseId(json.premiseId);
+
             });
     }
 
-    handleSubmit(subAmenityRequest, event) {
+    handleSubmit(task, event) {
         event.preventDefault();
-        let subAmenityRequestId = subAmenityRequest.subAmenityRequestId;
+        let taskId = task.taskId;
         let staffMemberId = this.refs.staffMemberId.value;
 
-        fetch(assignRequestToStaffMemberUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
-            body: JSON.stringify({staffMemberId: staffMemberId, subAmenityRequestId: subAmenityRequestId}),
+            body: JSON.stringify({staffMemberId: staffMemberId, taskId: taskId}),
         }).then(response => response.json()).then(json => {
             // swal('Message', json.message);
-            let tempList = this.state.result.sarList;
-            delete tempList[subAmenityRequest.currentIndex];
-            this.setState({sarList: tempList});
+            let tempList = this.state.result.taskList;
+            delete tempList[task.currentIndex];
+            this.setState({taskList: tempList});
             this.closeMsg();
         });
     }
 
-    changeSubAmenityRequestStatus(subAmenityRequest, event) {
+    changeTaskStatus(task, event) {
 
         event.preventDefault();
-        let subAmenityRequestId = subAmenityRequest.subAmenityRequestId;
+        let taskId = task.taskId;
 
-        fetch(changeSubAmenityRequestStatusUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
             body: JSON.stringify({
-                subAmenityRequestId: subAmenityRequestId,
+                taskId: taskId,
                 isDashboard: true,
                 status: this.refs.statusSubAmenity.value
             }),
         }).then(response => response.json()).then(json => {
-            let tempList = this.state.result.sarList;
-            if (['ASSIGNED'].indexOf(json.subAmenityRequest.status) > -1) {
-                tempList.splice(subAmenityRequest.currentIndex, 1, json.subAmenityRequest);
+            let tempList = this.state.result.taskList;
+            if (['ASSIGNED'].indexOf(json.task.status) > -1) {
+                tempList.splice(task.currentIndex, 1, json.task);
             } else {
-                delete tempList[subAmenityRequest.currentIndex];
+                delete tempList[task.currentIndex];
             }
-            this.setState({sarList: tempList});
+            this.setState({taskList: tempList});
             this.closeMsg();
         });
     }
@@ -121,43 +102,43 @@ class Dashboard extends React.Component {
         this.setState({showModalMsg: false});
     }
 
-    openMsg(subAmenityRequest, index) {
+    openMsg(task, index) {
 
-        if(index === -1) {
+        if (index === -1) {
             console.log('index is -1   ========-----------------------------');
-            this.state.result.sarList.map((item, index2) => {
+            this.state.result.taskList.map((item, index2) => {
 
-                if(item.subAmenityRequestId === subAmenityRequest.subAmenityRequestId) {
+                if (item.taskId === task.taskId) {
 
                     console.log('item ---');
-                    console.log(subAmenityRequest);
+                    console.log(task);
                     index = index2;
                 }
             })
         }
-        subAmenityRequest.currentIndex = index;
+        task.currentIndex = index;
         console.log('index------------');
         console.log(index);
 
-        fetch(listAllStaffUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Auth-Token': BasicDetail.getAccessToken()
             },
-            body: JSON.stringify({"premiseId": BasicDetail.getPremiseId()})
+            body: JSON.stringify({})
         })
             .then(response => response.json())
             .then(json => {
                 this.setState({staffList: json});
-                this.setState({subAmenityRequest: subAmenityRequest});
-                fetch(fetchSarActivityListUrl, {
+                this.setState({task: task});
+                fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-Auth-Token': BasicDetail.getAccessToken()
                     },
-                    body: JSON.stringify({"subAmenityRequestId": subAmenityRequest.subAmenityRequestId})
+                    body: JSON.stringify({"taskId": task.taskId})
                 })
                     .then(response => response.json())
                     .then(json => {
@@ -168,12 +149,12 @@ class Dashboard extends React.Component {
         this.setState({showModalMsg: true});
     }
 
-    closeTask(subAmenityRequest) {
+    closeTask(task) {
 
         let params = {
-            subAmenityRequestId: subAmenityRequest.subAmenityRequestId
+            taskId: task.taskId
         };
-        fetch(closeSubAmenityRequestUrl, {
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -184,76 +165,71 @@ class Dashboard extends React.Component {
             .then(response => response.json())
             .then(json => {
                 swal('Message', json.message);
-                // let tempList = this.state.result.sarList;
-                // delete tempList[subAmenityRequest.currentIndex];
-                // this.setState({sarList: tempList});
+                // let tempList = this.state.result.taskList;
+                // delete tempList[task.currentIndex];
+                // this.setState({taskList: tempList});
                 this.closeMsg();
             });
     }
 
-    onTaskAssigned(subAmenityRequest) {
+    onTaskAssigned(task) {
 
-        let tempList = this.state.result.sarList;
-        tempList.unshift(subAmenityRequest);
-        this.setState({sarList: tempList});
+        let tempList = this.state.result.taskList;
+        tempList.unshift(task);
+        this.setState({taskList: tempList});
         toastr.warning('Message', 'A new request has been initialized by guest');
     }
 
-    onTaskDelivered(subAmenityRequest) {
+    onTaskDelivered(task) {
 
         toastr.warning('Message', 'A service request has been delivered');
-        let tempList = this.state.result.sarList;
+        let tempList = this.state.result.taskList;
         for (let i = 0; i < tempList.length; i++) {
-            if (tempList[i].subAmenityRequestId === subAmenityRequest.subAmenityRequestId) {
-                tempList[i] = subAmenityRequest;
+            if (tempList[i].taskId === task.taskId) {
+                tempList[i] = task;
                 break;
             }
         }
-        this.setState({sarList: tempList});
+        this.setState({taskList: tempList});
     }
 
-    onTaskDenied(subAmenityRequest) {
+    onTaskDenied(task) {
 
         toastr.warning('Message', 'A service request has been denied and assigned back to you.');
-        let tempList = this.state.result.sarList;
+        let tempList = this.state.result.taskList;
         for (let i = 0; i < tempList.length; i++) {
-            if (tempList[i].subAmenityRequestId === subAmenityRequest.subAmenityRequestId) {
-                tempList[i] = subAmenityRequest;
+            if (tempList[i].taskId === task.taskId) {
+                tempList[i] = task;
                 break;
             }
         }
-        this.setState({sarList: tempList});
+        this.setState({taskList: tempList});
     }
 
-    onActivityAdded(subAmenityRequestActivity) {
+    onActivityAdded(taskActivity) {
 
         let tempList = this.state.result.sarActivityList;
-        tempList.unshift(subAmenityRequestActivity);
+        tempList.unshift(taskActivity);
         this.setState({sarActivityList: tempList});
 
-        if(subAmenityRequestActivity.subAmenityRequest.assignedToId === BasicDetail.getUserId() && ['ASSIGNED', 'ONGOING'].indexOf(subAmenityRequestActivity.subAmenityRequest.status) > -1) {
-            console.log('task assigned to self');
-            let tempSarList = this.state.result.sarList;
-            tempSarList.unshift(subAmenityRequestActivity.subAmenityRequest);
-            this.setState({sarList: tempSarList});
-        }
+
         toastr.warning('Message', 'A new activity has been added');
     }
 
-    onTaskCancelled(subAmenityRequestActivity) {
+    onTaskCancelled(taskActivity) {
 
         let tempList = this.state.result.sarActivityList;
-        tempList.unshift(subAmenityRequestActivity);
+        tempList.unshift(taskActivity);
         this.setState({sarActivityList: tempList});
         toastr.warning('Message', 'A task has been cancelled by guest.');
 
-        this.state.result.sarList.map((item, index) => {
+        this.state.result.taskList.map((item, index) => {
 
-            if (item.subAmenityRequestId === subAmenityRequestActivity.sarId) {
+            if (item.taskId === taskActivity.sarId) {
 
-                let temp = this.state.result.sarList;
+                let temp = this.state.result.taskList;
                 delete temp[index];
-                this.setState({sarList: temp});
+                this.setState({taskList: temp});
                 return true;
             }
         })
@@ -263,7 +239,7 @@ class Dashboard extends React.Component {
 
         const {result} = this.state;
         const {staffList} = this.state;
-        const {subAmenityRequest} = this.state;
+        const {task} = this.state;
         const {sarActivitiesOfSar} = this.state;
 
         let valueDiv = '';
@@ -274,12 +250,12 @@ class Dashboard extends React.Component {
 
         let grandTotal = 0;
 
-        if (subAmenityRequest.menuItemRequests)
-            Object.values(subAmenityRequest.menuItemRequests).forEach(function (item) {
+        if (task.menuItemRequests)
+            Object.values(task.menuItemRequests).forEach(function (item) {
                 grandTotal = grandTotal + item.price * item.quantity
             });
 
-        if (subAmenityRequest.menuItemRequests && subAmenityRequest.menuItemRequests.length > 0) {
+        if (task.menuItemRequests && task.menuItemRequests.length > 0) {
 
             menuItemRequestDiv = <div>
                 <hr/>
@@ -289,18 +265,14 @@ class Dashboard extends React.Component {
                     <thead>
                     <tr>
                         <th>Item</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
                         <th>Total</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {subAmenityRequest.menuItemRequests.map((item, index) => (
+                    {task.menuItemRequests.map((item, index) => (
                         <tr key={index} className="msg-display ">
                             <td>{item.name}</td>
-                            <td>{BasicDetail.getCurrencySymbolCode()} {item.price}</td>
                             <td>{item.quantity}</td>
-                            <td>{BasicDetail.getCurrencySymbolCode()} {item.price * item.quantity}</td>
 
                         </tr>
                     ))}
@@ -308,7 +280,6 @@ class Dashboard extends React.Component {
                         <th></th>
                         <th></th>
                         <th>TOTAL:</th>
-                        <th>{BasicDetail.getCurrencySymbolCode()} {grandTotal}</th>
                     </tr>
                     </tbody>
                 </Table>
@@ -316,55 +287,55 @@ class Dashboard extends React.Component {
         }
 
 
-        if (subAmenityRequest.descriptionLabel !== null) {
+        if (task.descriptionLabel !== null) {
             descriptionDiv = <fieldset>
                 <div className="form-group">
-                    <label>{subAmenityRequest.descriptionLabel}</label>
+                    <label>{task.descriptionLabel}</label>
                     <div>
                                                         <textarea placeholder="" disabled name="description"
                                                                   ref="description"
                                                                   className="form-control"
-                                                                  value={subAmenityRequest.description || ''}/>
+                                                                  value={task.description || ''}/>
                     </div>
                 </div>
             </fieldset>;
         }
 
-        if (subAmenityRequest.quantityLabel !== null) {
+        if (task.quantityLabel !== null) {
             quantityDiv = <fieldset>
                 <div className="form-group">
-                    <label>{subAmenityRequest.quantityLabel}</label>
+                    <label>{task.quantityLabel}</label>
                     <div>
                         <input type="text" disabled name="quantity" ref="quantity"
                                className="form-control"
-                               value={subAmenityRequest.quantity || ''}/>
+                               value={task.quantity || ''}/>
                     </div>
                 </div>
             </fieldset>;
         }
 
-        if (subAmenityRequest.whenToDeliverLabel !== null) {
+        if (task.whenToDeliverLabel !== null) {
             whenToDeliverDiv = <fieldset>
                 <div className="form-group">
-                    <label>{subAmenityRequest.whenToDeliverLabel}</label>
+                    <label>{task.whenToDeliverLabel}</label>
                     <div>
                         <input type="text" disabled name="whenToDeliver" ref="whenToDeliver"
                                className="form-control"
-                               value={subAmenityRequest.whenToDeliver || ''}/>
+                               value={task.whenToDeliver || ''}/>
                     </div>
                 </div>
             </fieldset>;
         }
 
-        if (subAmenityRequest.valueLabel !== null) {
+        if (task.valueLabel !== null) {
 
             valueDiv = <fieldset>
                 <div className="form-group">
-                    <label>{subAmenityRequest.valueLabel}</label>
+                    <label>{task.valueLabel}</label>
                     <div>
                         <input type="text" disabled name="value" ref="value"
                                className="form-control"
-                               value={subAmenityRequest.value || ''}/>
+                               value={task.value || ''}/>
                     </div>
                 </div>
             </fieldset>;
@@ -373,37 +344,13 @@ class Dashboard extends React.Component {
 
         return (
             <section>
-                <SockJsClient url={WEB_SOCKET_STOMP_URL}
-                              topics={['/topic/sarAssignedToDeskStaff/' + BasicDetail.getUserId()]}
-                              onMessage={(msg) => {
-                                  this.onTaskAssigned(msg)
-                              }}/>
-                <SockJsClient url={WEB_SOCKET_STOMP_URL}
-                              topics={['/topic/deskStaff/sarDelivered/' + BasicDetail.getUserId()]}
-                              onMessage={(msg) => {
-                                  this.onTaskDelivered(msg)
-                              }}/>
-                <SockJsClient url={WEB_SOCKET_STOMP_URL}
-                              topics={['/topic/deskStaff/sarDenied/' + BasicDetail.getUserId()]}
-                              onMessage={(msg) => {
-                                  this.onTaskDenied(msg)
-                              }}/>
-                <SockJsClient url={WEB_SOCKET_STOMP_URL}
-                              topics={['/topic/deskStaff/sarActivity/' + BasicDetail.getUserId()]}
-                              onMessage={(msg) => {
-                                  this.onActivityAdded(msg)
-                              }}/>
-                <SockJsClient url={WEB_SOCKET_STOMP_URL}
-                              topics={['/topic/deskStaff/sarCancelled']}
-                              onMessage={(msg) => {
-                                  this.onTaskCancelled(msg)
-                              }}/>
+
                 <div className="content-heading bg-white">
                     <Row>
                         <Col sm={8}>
                             <h4 className="m0 text-thin">
-                                <span data-localize="WELCOME">Welcome to </span>
-                                {BasicDetail.getPremiseName()}</h4>
+                                <span data-localize="WELCOME"></span>
+                                {BasicDetail.getFullName()}</h4>
                             <small>Manage all your tasks are here.</small>
                         </Col>
                         <Col sm={4} className="text-right">
@@ -425,7 +372,7 @@ class Dashboard extends React.Component {
                             <div className="card">
                                 <table className="tableCompact table-hover table-fixed va-middle">
                                     <tbody>
-                                    {result.sarList.map((item, index) => (
+                                    {result.taskList.map((item, index) => (
                                         <tr key={index} className="msg-display clickable">
                                             <td onClick={this.openMsg.bind(this, item, index)} className="wd-xxs">
                                                 <div className="initial32 bg-indigo-500">E</div>
@@ -460,7 +407,8 @@ class Dashboard extends React.Component {
                                 </div>
 
                                 {result.sarActivityList.map(item => (
-                                    <div className="card-body bb clickable" onClick={this.openMsg.bind(this, item.subAmenityRequest, -1)}>
+                                    <div className="card-body bb clickable"
+                                         onClick={this.openMsg.bind(this, item.task, -1)}>
                                         <p className="pull-left mr"><a href=""><img src="img/user/04.jpg" alt="User"
                                                                                     className="img-circle thumb32"/></a>
                                         </p>
@@ -481,12 +429,12 @@ class Dashboard extends React.Component {
                             <div className="row" style={{marginTop: '20px'}}>
                                 <div className="col-lg-8">
                                     <div style={{fontSize: '18px', display: 'inline-block'}}
-                                        className={subAmenityRequest.statusColorCode}> {subAmenityRequest.status || ''} </div>
+                                         className={task.statusColorCode}> {task.status || ''} </div>
                                 </div>
                                 <div className="col-lg-4">
                                     <button
-                                        className={"btn btn-warning " + ("DELIVERED" === subAmenityRequest.status ? "" : "hidden")}
-                                        onClick={this.closeTask.bind(this, subAmenityRequest)}>Close Service
+                                        className={"btn btn-warning " + ("DELIVERED" === task.status ? "" : "hidden")}
+                                        onClick={this.closeTask.bind(this, task)}>Close Service
                                         Request
                                     </button>
                                 </div>
@@ -501,9 +449,9 @@ class Dashboard extends React.Component {
                                             <div className="form-group">
                                                 <label>Assign To</label>
                                                 <div className="">
-                                                    <select id="staffMemberId" value={subAmenityRequest.assignedToId}
+                                                    <select id="staffMemberId" value={task.assignedToId}
                                                             name="staffMemberId" ref="staffMemberId"
-                                                            onChange={(e) => this.handleSubmit(subAmenityRequest, e)}
+                                                            onChange={(e) => this.handleSubmit(task, e)}
                                                             className="form-control">
                                                         <optgroup label="Front Office">
                                                             {staffList.frontOfficeStaff.map(item => (
@@ -537,7 +485,7 @@ class Dashboard extends React.Component {
                                                     <input type="text" disabled placeholder="" name="amenity"
                                                            ref="amenity"
                                                            className="form-control"
-                                                           value={subAmenityRequest.amenity || ''}/>
+                                                           value={task.amenity || ''}/>
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -547,7 +495,7 @@ class Dashboard extends React.Component {
                                                 <div>
                                                     <input type="text" disabled name="subAmenity" ref="subAmenity"
                                                            className="form-control"
-                                                           value={subAmenityRequest.subAmenity || ''}/>
+                                                           value={task.subAmenity || ''}/>
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -558,9 +506,9 @@ class Dashboard extends React.Component {
 
                                                     <select
                                                         name="statusSubAmenity" ref="statusSubAmenity"
-                                                        value={subAmenityRequest.status}
-                                                        disabled={['CANCELLED', 'DELIVERED', ''].indexOf(subAmenityRequest.status) > -1}
-                                                        onChange={(e) => this.changeSubAmenityRequestStatus(subAmenityRequest, e)}
+                                                        value={task.status}
+                                                        disabled={['CANCELLED', 'DELIVERED', ''].indexOf(task.status) > -1}
+                                                        onChange={(e) => this.changeTaskStatus(task, e)}
                                                         className="form-control">
 
                                                         <option value="INITIALIZED" hidden>INITIALIZED</option>
@@ -571,19 +519,19 @@ class Dashboard extends React.Component {
 
 
                                                         <option value="ASSIGNED"
-                                                                hidden={(['INITIALIZED', 'ONGOING'].indexOf(subAmenityRequest.status) === -1) || subAmenityRequest.status === 'ASSIGNED'}>
+                                                                hidden={(['INITIALIZED', 'ONGOING'].indexOf(task.status) === -1) || task.status === 'ASSIGNED'}>
                                                             ASSIGNED
                                                         </option>
                                                         <option value="ONGOING"
-                                                                hidden={subAmenityRequest.status === 'ONGOING'}>
+                                                                hidden={task.status === 'ONGOING'}>
                                                             ONGOING
                                                         </option>
                                                         <option value="DELIVERED"
-                                                                hidden={(['ONGOING'].indexOf(subAmenityRequest.status) === -1) || subAmenityRequest.status === 'DELIVERED'}>
+                                                                hidden={(['ONGOING'].indexOf(task.status) === -1) || task.status === 'DELIVERED'}>
                                                             DELIVERED
                                                         </option>
                                                         <option value="REJECTED"
-                                                                hidden={subAmenityRequest.status === 'REJECTED'}>
+                                                                hidden={task.status === 'REJECTED'}>
                                                             REJECTED
                                                         </option>
                                                     </select>
